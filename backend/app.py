@@ -3,7 +3,7 @@ import signal
 import sys
 from fastapi import FastAPI
 from backend.config.settings import Settings
-from backend.routes.password_reset_routes import router as password_reset_router
+from backend.routes.profile_routes import router as profile_router
 
 logger = logging.getLogger("ecommerce")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -11,10 +11,10 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 settings = Settings()
 app = FastAPI(title="E-commerce Platform Backend", version="1.0.0")
 
-app.include_router(password_reset_router, prefix="/api/password", tags=["Password Management"])
+app.include_router(profile_router, prefix="/api/profile", tags=["User Profile"])
 
 def shutdown_handler(signal_received: int, frame: object) -> None:
-    logger.info("Gracefully shutting down backend application...")
+    logger.info("Gracefully shutting down application...")
     sys.exit(0)
 
 signal.signal(signal.SIGINT, shutdown_handler)
@@ -22,8 +22,8 @@ signal.signal(signal.SIGTERM, shutdown_handler)
 
 @app.on_event("startup")
 async def startup_event() -> None:
-    logger.info("Backend initialized successfully")
+    logger.info("Application startup successful")
 
 @app.on_event("shutdown")
 async def shutdown_event() -> None:
-    logger.info("Backend shutdown complete")
+    logger.info("Application shutdown complete")
