@@ -3,7 +3,7 @@ import signal
 import sys
 from fastapi import FastAPI
 from backend.config.settings import Settings
-from backend.routes.user_routes import router as user_router
+from backend.routes.auth_routes import router as auth_router
 
 logger = logging.getLogger("ecommerce")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 settings = Settings()
 app = FastAPI(title="E-commerce Platform Backend", version="1.0.0")
 
-app.include_router(user_router, prefix="/api/users", tags=["Users"])
+app.include_router(auth_router, prefix="/api/auth", tags=["Authentication"])
 
 def shutdown_handler(signal_received: int, frame: object) -> None:
     logger.info("Shutting down application gracefully...")
@@ -22,7 +22,7 @@ signal.signal(signal.SIGTERM, shutdown_handler)
 
 @app.on_event("startup")
 async def startup_event() -> None:
-    logger.info("Application startup initiated")
+    logger.info("Application startup complete")
 
 @app.on_event("shutdown")
 async def shutdown_event() -> None:
